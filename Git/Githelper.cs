@@ -5,15 +5,14 @@ using System.Linq;
 
 namespace GitLineHistory
 {
-    internal static class GitHelper
+    public static class GitHelper
     {
-        public static List<LineChange> GetLineChanges(string repositoryPath, string filePath)
+        public static List<LineChange> GetLineChanges()
         {
             var lineChanges = new List<LineChange>();
-
-            using (var repo = new Repository(repositoryPath))
+           
+            using (var repo = new Repository(Directory.GetCurrentDirectory()))
             {
-                var fileRelativePath = filePath.Replace(repositoryPath, string.Empty).TrimStart(Path.DirectorySeparatorChar);
                 var headCommit = repo.Head.Tip;
 
                 if (headCommit == null)
@@ -38,18 +37,7 @@ namespace GitLineHistory
                 var newTree = headCommit.Tree;
 
                 var patch = repo.Diff.Compare<Patch>(oldTree, newTree);
-                var patchEntry = patch[fileRelativePath];
 
-                foreach (var hunk in patchEntry.)
-                {
-                    var lineChange = new LineChange
-                    {
-                        LineNumber = contentChange.NewLineNumber,
-                        ChangeKind = contentChange.Type
-                    };
-
-                    lineChanges.Add(lineChange);
-                }
             }
 
             return lineChanges;
